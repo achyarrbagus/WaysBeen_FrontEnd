@@ -51,7 +51,7 @@ const ShippingModal = (props) => {
         onSuccess: function (result) {
           /* You may add your own implementation here */
           console.log(result);
-          navigate("/detail-transaction");
+          window.location.href = "/detail-transaction";
           localStorage.setItem("CHARTDATA", JSON.stringify([]));
         },
         onPending: function (result) {
