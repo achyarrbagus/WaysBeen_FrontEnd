@@ -134,13 +134,9 @@ const DetailTransaction = () => {
                           <div className="mt-3 d-flex justify-content-center">
                             <img src={Qr} />
                           </div>
-                          <div
-                            className={`mt-3 ${
-                              item.status == "waiting" ? "bg-warning" : item.status == "success" ? "bg-success" : ""
-                            }`}
-                          >
-                            <p className="p-2" style={{ color: "white" }}>
-                              {item.status}
+                          <div className="mt-3" style={{ backgroundColor: "#613D2B" }}>
+                            <p className="p-2" style={{ color: "white", textAlign: "center" }}>
+                              Waiting Approve
                             </p>
                           </div>
                         </div>
@@ -230,7 +226,7 @@ const DetailTransaction = () => {
                           <img src={Qr} />
                         </div>
                         <div className="mt-3" style={{ backgroundColor: "#613D2B" }}>
-                          <p className="p-2" style={{ color: "white" }}>
+                          <p className="p-2" style={{ color: "white", textAlign: "center" }}>
                             failed
                           </p>
                         </div>
