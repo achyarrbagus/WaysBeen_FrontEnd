@@ -8,6 +8,11 @@ import produk1 from "../assets/produk-3.png";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "react-query";
 import { API } from "../config/api";
+import { UserContext } from "../context/UserContext";
+import { Swal } from "sweetalert2";
+import Alert from "../Components/AlertModal";
+import AlertModal from "../Components/AlertModal";
+import { Modal } from "react-bootstrap";
 
 //
 
@@ -16,8 +21,10 @@ const DetailProduk = () => {
   const params = useParams();
   const id = parseInt(params.id);
   const { kumpulanState } = useContext(ContextGlobal);
-  const { state, setState, stateQuantity, setStateQuantity } = kumpulanState;
+  const { stateQuantity, setStateQuantity } = kumpulanState;
   const [product, setProduct] = useState({});
+  const [state, dispatch] = useContext(UserContext);
+  const [show, setShow] = useState(false);
 
   //
   let { data: productdDetail } = useQuery("productCache", async () => {
@@ -37,13 +44,19 @@ const DetailProduk = () => {
       let result = quantity.reduce((sum, quantity) => {
         return sum + quantity;
       });
-      console.log(result);
 
       setStateQuantity(result);
     }
   };
 
   //
+  const stockAlert = () => {
+    // setShow(true);
+    setShow(true);
+    console.log(show);
+    alert("Sorry, Your Product Is Empty");
+  };
+
   const addChart = () => {
     let newChart = {
       namaProduct: product.name,
@@ -83,6 +96,7 @@ const DetailProduk = () => {
 
   return (
     <Container>
+      <AlertModal status={show} />
       <Row style={{ marginTop: "150px", height: "70vh" }} className="justify-content-center d-flex gap-2">
         <Col md={4}>
           <img className="img-fluid" width={"100%"} src={product?.photo} />
@@ -94,13 +108,24 @@ const DetailProduk = () => {
           <h2 className="text-end mt-5" style={{ color: "#974A4A" }}>
             Rp.{product?.price}
           </h2>
-          <button
-            style={{ width: "100%", height: "40px", borderRadius: "5px", color: "white", background: "#613D2B" }}
-            className=""
-            onClick={addChart}
-          >
-            Add Chart
-          </button>
+          {state.isLogin &&
+            (product?.stock > 0 ? (
+              <button
+                style={{ width: "100%", height: "40px", borderRadius: "5px", color: "white", background: "#613D2B" }}
+                className=""
+                onClick={addChart}
+              >
+                Add Chart
+              </button>
+            ) : (
+              <button
+                style={{ width: "100%", height: "40px", borderRadius: "5px", color: "white", background: "#613D2B" }}
+                className=""
+                onClick={stockAlert}
+              >
+                Out Of Stock !!!
+              </button>
+            ))}
         </Col>
       </Row>
     </Container>
