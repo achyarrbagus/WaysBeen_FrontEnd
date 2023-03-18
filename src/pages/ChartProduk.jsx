@@ -9,11 +9,14 @@ import { useContext, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import ShippingModal from "../Components/ShippingModal";
 import Swal from "sweetalert2";
+import { API } from "../config/api";
+import { useQuery } from "react-query";
 
 const ChartProduk = () => {
   const { kumpulanState } = useContext(ContextGlobal);
   const { chartData, setChartData, stateQuantity, setStateQuantity, showModal, setShowModal } = kumpulanState;
   const [data, setData] = useState([]);
+  const [product, setProduct] = useState([]);
   const navigate = useNavigate();
   // const [price, setPrice] = useState();
 
@@ -25,6 +28,41 @@ const ChartProduk = () => {
   //   });
   //   setStateQuantity(result);
   // };
+
+  // fecthing data from database
+  let { data: products } = useQuery("productsChace", async () => {
+    const response = await API.get("/product");
+    return response.data.data;
+  });
+  // fecthing data from local storage
+  const dataChart = JSON.parse(localStorage.getItem("CHARTDATA"));
+  useEffect(() => {
+    setData(dataChart);
+    //
+    //change this to the script source you want to load, for example this is snap.js sandbox env
+    const midtransScriptUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
+    //change this according to your client-key
+    const myMidtransClientKey = process.env.REACT_APP_MIDTRANS_CLIENT_KEY;
+
+    let scriptTag = document.createElement("script");
+    scriptTag.src = midtransScriptUrl;
+    // optional if you want to set script attribute
+    // for example snap.js have data-client-key attribute
+    scriptTag.setAttribute("data-client-key", myMidtransClientKey);
+
+    document.body.appendChild(scriptTag);
+    return () => {
+      document.body.removeChild(scriptTag);
+    };
+  }, []);
+
+  const totalPrice =
+    dataChart.length > 0 &&
+    dataChart.reduce((acc, item) => {
+      return acc + item.priceProduct * item.quantity;
+    }, 0);
+
+  // alert(totalPrice);
 
   // const datalocal = JSON.parse(localStorage.getItem("CHARTDATA"));
   // setData(datalocal);
@@ -57,19 +95,45 @@ const ChartProduk = () => {
     setShowModal(true);
   };
 
+  // const incremeent = (index) => {
+  //   const updateChart = [...data];
+  //   const updateProduct = [...product];
+  //   if (updateChart[index].quantity === updateProduct[index].stock) {
+  //     return console.log(updateChart[index].quantity, updateProduct[index].stock);
+  //     return Swal.fire({
+  //       icon: "error",
+  //       title: "Sorry, The Item You Want Is Out Of Stock",
+  //       timer: 3000,
+  //     });
+  //   } else {
+  //     updateChart[index].quantity += 1;
+  //     setData(updateChart);
+  //     localStorage.setItem("CHARTDATA", JSON.stringify(updateChart));
+  //     window.dispatchEvent(new Event("storage"));
+  //   }
+  // };
   const incremeent = (index) => {
-    const updateChart = [...data];
-    updateChart[index].quantity += 1;
-    setData(updateChart);
-    localStorage.setItem("CHARTDATA", JSON.stringify(updateChart));
-    window.dispatchEvent(new Event("storage"));
+    const updateCart = [...dataChart];
+    const foundProduct = products.find((item) => item.id === dataChart[index].id);
+
+    if (updateCart[index].quantity === foundProduct.stock) {
+      Swal.fire({
+        icon: "error",
+        title: "Sorry, The Item You Want Is Out Of Stock",
+        timer: 3000,
+      });
+    } else {
+      updateCart[index].quantity += 1;
+      setData(updateCart);
+      localStorage.setItem("CHARTDATA", JSON.stringify(updateCart));
+      window.dispatchEvent(new Event("storage"));
+    }
   };
 
   const decremeent = (item, index) => {
     const updateChart = [...data];
     updateChart[index].quantity = Math.max(1, item.quantity - 1);
     setData(updateChart);
-    console.log(data);
     localStorage.setItem("CHARTDATA", JSON.stringify(data));
     window.dispatchEvent(new Event("storage"));
   };
@@ -86,35 +150,6 @@ const ChartProduk = () => {
       timer: 1500,
     });
   };
-  // fecthing data from local storage
-  const dataChart = JSON.parse(localStorage.getItem("CHARTDATA"));
-  useEffect(() => {
-    setData(dataChart);
-    //
-    //change this to the script source you want to load, for example this is snap.js sandbox env
-    const midtransScriptUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
-    //change this according to your client-key
-    const myMidtransClientKey = process.env.REACT_APP_MIDTRANS_CLIENT_KEY;
-
-    let scriptTag = document.createElement("script");
-    scriptTag.src = midtransScriptUrl;
-    // optional if you want to set script attribute
-    // for example snap.js have data-client-key attribute
-    scriptTag.setAttribute("data-client-key", myMidtransClientKey);
-
-    document.body.appendChild(scriptTag);
-    return () => {
-      document.body.removeChild(scriptTag);
-    };
-  }, []);
-
-  const totalPrice =
-    dataChart.length > 0 &&
-    dataChart.reduce((acc, item) => {
-      return acc + item.priceProduct * item.quantity;
-    }, 0);
-
-  // alert(totalPrice);
 
   return (
     <Container>

@@ -79,14 +79,17 @@ const DetailProduk = () => {
       if (indexChart === -1) {
         newChart.quantity = 1;
         chartData.push(newChart);
-
         const chartDataJson = JSON.stringify(chartData);
         localStorage.setItem("CHARTDATA", chartDataJson);
       } else {
-        chartData[indexChart].quantity += 1;
+        if (chartData[indexChart].quantity === product?.stock) {
+          return alert("Sorry, the item you want is out of stock");
+        } else {
+          chartData[indexChart].quantity += 1;
 
-        const chartDataJson = JSON.stringify(chartData);
-        localStorage.setItem("CHARTDATA", chartDataJson);
+          const chartDataJson = JSON.stringify(chartData);
+          localStorage.setItem("CHARTDATA", chartDataJson);
+        }
       }
       const chartDataJson = JSON.stringify(chartData);
       localStorage.setItem("CHARTDATA", chartDataJson);
