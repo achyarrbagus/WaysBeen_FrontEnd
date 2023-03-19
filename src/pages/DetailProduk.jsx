@@ -53,8 +53,6 @@ const DetailProduk = () => {
   const stockAlert = () => {
     // setShow(true);
     setShow(true);
-    console.log(show);
-    alert("Sorry, Your Product Is Empty");
   };
 
   const addChart = () => {

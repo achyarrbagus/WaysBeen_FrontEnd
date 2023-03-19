@@ -2,7 +2,6 @@ import { Form } from "react-bootstrap";
 import { Container, Row, Col } from "react-bootstrap";
 import { Navigate, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import produkFor from "../assets/produk-4.png";
 import { useState } from "react";
 import { useMutation } from "react-query";
 import { API, setAuthToken } from "../config/api";
@@ -25,7 +24,6 @@ const AddProduct = () => {
       ...formProduct,
       [e.target.name]: e.target.type === "file" ? e.target.files : e.target.value,
     });
-    console.log(formProduct);
     // Create image url for preview
     if (e.target.type === "file") {
       let url = URL.createObjectURL(e.target.files[0]);
