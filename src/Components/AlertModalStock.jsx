@@ -10,8 +10,8 @@ export default function AlertModalStock(props) {
     <>
       <Modal size="lg" aria-labelledby="contained-modal-title-vcenter" centered show={props.status} onHide={props.handleClose}>
         <Alert className="mb-0" variant="danger" show={props.status} onClose={props.handleClose} dismissible>
-          <Alert.Heading>Ohh Sorry </Alert.Heading>
-          <p>Your order is out of stock</p>
+          <Alert.Heading className="text-center fs-1">Ohh Sorry </Alert.Heading>
+          <p className="text-center fs-5"> Your order is out of stock</p>
         </Alert>
       </Modal>
     </>
