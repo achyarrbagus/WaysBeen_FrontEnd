@@ -10,9 +10,9 @@ import { useQuery, useMutation } from "react-query";
 import { API } from "../config/api";
 import { UserContext } from "../context/UserContext";
 import { Swal } from "sweetalert2";
-import Alert from "../Components/AlertModal";
-import AlertModal from "../Components/AlertModal";
+
 import { Modal } from "react-bootstrap";
+import AlertModalStock from "./../Components/AlertModalStock";
 
 //
 
@@ -83,7 +83,7 @@ const DetailProduk = () => {
         localStorage.setItem("CHARTDATA", chartDataJson);
       } else {
         if (chartData[indexChart].quantity === product?.stock) {
-          return alert("Sorry, the item you want is out of stock");
+          return setShow(true);
         } else {
           chartData[indexChart].quantity += 1;
 
@@ -97,9 +97,11 @@ const DetailProduk = () => {
     window.dispatchEvent(new Event("storage"));
   };
 
+  const handleClose = () => setShow(false);
+
   return (
     <Container>
-      <AlertModal status={show} />
+      <AlertModalStock status={show} handleClose={handleClose} />
       <Row style={{ marginTop: "150px", height: "70vh" }} className="justify-content-center d-flex gap-2">
         <Col md={4}>
           <img className="img-fluid" width={"100%"} src={product?.photo} />

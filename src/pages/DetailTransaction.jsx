@@ -11,15 +11,15 @@ import { Link, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { API } from "../config/api";
 import { UserContext } from "../context/UserContext";
+import AlertModalTransaction from "../Components/AlertModalTransaction";
 
 const DetailTransaction = () => {
   const { kumpulanState } = useContext(ContextGlobal);
+  const { showAlertTransaction, setShowAlertTransaction } = kumpulanState;
   const [chart, setChart] = useState([]);
-  const [isLogin, setIsLogin] = useState({});
-  const [trans, setTrans] = useState({});
   const [show, setShow] = useState(false);
   const [state] = useContext(UserContext);
-  const [profile, setProfile] = useState();
+
   const [isLoading, setIsLoading] = useState(true);
 
   const fecthData = () => {
@@ -32,14 +32,16 @@ const DetailTransaction = () => {
   let { data: data, refetch } = useQuery("profileCache", async () => {
     const response = await API.get("/profile/" + id);
     setIsLoading(false);
-    // console.log(response);
     return response.data.data;
   });
+
+  useEffect(() => {
+    setShowAlertTransaction(JSON.parse(localStorage.getItem("isSuccess")));
+  }, []);
 
   let { data: transaction } = useQuery("transactionCache", async () => {
     try {
       const response = await API.get("/transaction-user");
-      console.log(response);
       return response.data.data;
     } catch (error) {
       console.log(error);
@@ -49,8 +51,6 @@ const DetailTransaction = () => {
   const updatedProfile = () => {
     setShow(true);
   };
-
-  // useEffect(() => {}, []);
 
   function formatDate(inputDate) {
     const date = new Date(inputDate);
@@ -62,6 +62,13 @@ const DetailTransaction = () => {
 
   return (
     <Container style={{ marginTop: "100px" }}>
+      <AlertModalTransaction
+        status={showAlertTransaction}
+        handleClose={() => {
+          setShowAlertTransaction(false);
+          localStorage.removeItem("isSuccess");
+        }}
+      />
       <UpdatedProfilModal show={show} closeModal={() => setShow(false)} id={id} refetch={refetch} />
       <Row style={{ padding: "50px", height: "60vh" }}>
         <Col className="">

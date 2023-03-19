@@ -30,7 +30,7 @@ function App() {
   const checkUser = async () => {
     try {
       const response = await API.get("/check-auth");
-      console.log("check user success", response);
+      // console.log("check user success", response);
       //get userData
       let payload = response.data.data;
       //get token from localStorage
@@ -42,7 +42,7 @@ function App() {
       });
       setIsLoading(false);
     } catch (error) {
-      console.log("check user failed : ", error);
+      // console.log("check user failed : ", error);
       dispacth({
         type: "AUTH_ERROR",
       });
@@ -53,7 +53,7 @@ function App() {
   useEffect(() => {
     if (localStorage.token) {
       setAuthToken(localStorage.token);
-      console.log(localStorage.token);
+      // console.log(localStorage.token);
       checkUser();
     } else {
       setIsLoading(false);

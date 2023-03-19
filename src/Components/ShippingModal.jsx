@@ -14,7 +14,7 @@ const ShippingModal = (props) => {
   const { kumpulanState } = useContext(ContextGlobal);
   const date = new Date();
   const navigate = useNavigate();
-  const { showModal, setShowModal, setStateQuantity } = kumpulanState;
+  const { showModal, setShowModal, setStateQuantity, showAlertTransaction, setShowAlertTransaction } = kumpulanState;
   const chartData = JSON.parse(localStorage.getItem("CHARTDATA"));
   const [price, setPrice] = useState(props.price);
 
@@ -50,9 +50,9 @@ const ShippingModal = (props) => {
       window.snap.pay(token, {
         onSuccess: function (result) {
           /* You may add your own implementation here */
-          console.log(result);
           window.location.href = "/detail-transaction";
           localStorage.setItem("CHARTDATA", JSON.stringify([]));
+          localStorage.setItem("isSuccess", JSON.stringify(true));
         },
         onPending: function (result) {
           /* You may add your own implementation here */

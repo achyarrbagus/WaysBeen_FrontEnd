@@ -11,23 +11,14 @@ import ShippingModal from "../Components/ShippingModal";
 import Swal from "sweetalert2";
 import { API } from "../config/api";
 import { useQuery } from "react-query";
+import AlertModalStock from "./../Components/AlertModalStock";
 
 const ChartProduk = () => {
   const { kumpulanState } = useContext(ContextGlobal);
-  const { chartData, setChartData, stateQuantity, setStateQuantity, showModal, setShowModal } = kumpulanState;
+  const { setStateQuantity, setShowModal } = kumpulanState;
   const [data, setData] = useState([]);
-  const [product, setProduct] = useState([]);
-  const navigate = useNavigate();
-  // const [price, setPrice] = useState();
 
-  // const setQuantity = () => {
-  //   const chartData = JSON.parse(localStorage.getItem("CHARTDATA"));
-  //   const quantity = chartData.map((item) => item.quantity);
-  //   let result = quantity.reduce((sum, quantity) => {
-  //     return sum + quantity;
-  //   });
-  //   setStateQuantity(result);
-  // };
+  const navigate = useNavigate();
 
   // fecthing data from database
   let { data: products } = useQuery("productsChace", async () => {
@@ -117,11 +108,7 @@ const ChartProduk = () => {
     const foundProduct = products.find((item) => item.id === dataChart[index].id);
 
     if (updateCart[index].quantity === foundProduct.stock) {
-      Swal.fire({
-        icon: "error",
-        title: "Sorry, The Item You Want Is Out Of Stock",
-        timer: 3000,
-      });
+      setShow(true);
     } else {
       updateCart[index].quantity += 1;
       setData(updateCart);
@@ -150,9 +137,12 @@ const ChartProduk = () => {
       timer: 1500,
     });
   };
+  const [show, setShow] = useState(false);
 
+  const handleClose = () => setShow(false);
   return (
     <Container>
+      <AlertModalStock status={show} handleClose={handleClose} />
       <ShippingModal price={totalPrice} setData={setData} />
       <Row className="justify-content-center" style={{ marginTop: "100px" }}>
         <Col className="fs-3">My Chart</Col>
