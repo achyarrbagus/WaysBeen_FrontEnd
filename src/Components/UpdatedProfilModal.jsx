@@ -65,7 +65,7 @@ function UpdatedProfilModal({ show, closeModal, id, refetch }) {
     <>
       <Modal show={show} onHide={closeModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Update Profill</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={(e) => handleSubmit.mutate(e)}>

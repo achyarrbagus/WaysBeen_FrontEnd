@@ -105,6 +105,12 @@ const DetailTransaction = () => {
           <div className="d-flex">
             <div className="mt-2">
               {transaction?.map((item, index) => {
+                const total = item?.cart.reduce((a, c) => {
+                  const totalQty = a + c.order_quantity;
+                  return totalQty;
+                }, 0);
+                console.log(transaction);
+
                 if (item?.status === "waiting") {
                   return (
                     <Row className="p-4 mt-2" style={{ backgroundColor: "#F6E6DA" }}>
@@ -115,6 +121,7 @@ const DetailTransaction = () => {
                               className="img-fluid"
                               style={{ height: "180px", width: "170px" }}
                               src={item.cart[0].product.photo}
+                              alt="ini photo"
                             />
                           </div>
                           <div className="d-flex flex-column gap-1">
@@ -124,13 +131,7 @@ const DetailTransaction = () => {
                             </div>
                             <div>
                               <p className="mt-2 mb-0">Price : Rp.{item?.price}</p>
-                              <p className="m-0">
-                                Qty :{" "}
-                                {item?.cart.map((itm, ind) => {
-                                  EAD;
-                                  return parseInt(itm?.order_quantity);
-                                })}{" "}
-                              </p>
+                              <p className="m-0">Qty :{total}</p>
                               <p>Sub Total :{item?.price} </p>
                             </div>
                           </div>
@@ -162,6 +163,7 @@ const DetailTransaction = () => {
                               className="img-fluid"
                               style={{ height: "180px", width: "170px" }}
                               src={item.cart[0].product.photo}
+                              alt="ini photo"
                             />
                           </div>
                           <div className="d-flex flex-column gap-1">
@@ -171,12 +173,7 @@ const DetailTransaction = () => {
                             </div>
                             <div>
                               <p className="mt-2 mb-0">Price : Rp.{item?.price}</p>
-                              <p className="m-0">
-                                Qty :{" "}
-                                {item?.cart.map((itm, ind) => {
-                                  return itm?.order_quantity;
-                                })}{" "}
-                              </p>
+                              <p className="m-0">Qty :{total}</p>
                               <p>Sub Total : {item?.price}</p>
                             </div>
                           </div>
@@ -216,12 +213,7 @@ const DetailTransaction = () => {
                           </div>
                           <div>
                             <p className="mt-2 mb-0">Price : Rp.{item?.price}</p>
-                            <p className="m-0">
-                              Qty :{" "}
-                              {item?.cart.map((itm, ind) => {
-                                return itm?.order_quantity;
-                              })}{" "}
-                            </p>
+                            <p className="m-0">Qty :{total}</p>
                             <p>Sub Total :{item?.price} </p>
                           </div>
                         </div>
