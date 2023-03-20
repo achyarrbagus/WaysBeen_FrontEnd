@@ -127,7 +127,7 @@ const DetailTransaction = () => {
                               <p className="m-0">
                                 Qty :{" "}
                                 {item?.cart.map((itm, ind) => {
-                                  return itm?.order_quantity;
+                                  return parseInt(itm?.order_quantity);
                                 })}{" "}
                               </p>
                               <p>Sub Total :{item?.price} </p>
